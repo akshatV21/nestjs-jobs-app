@@ -4,8 +4,8 @@ import { AuthService } from './auth.service'
 import { ConfigModule } from '@nestjs/config'
 import * as Joi from 'joi'
 import {
-  Comapny,
-  ComapnySchema,
+  Company,
+  CompanySchema,
   CompanyRepository,
   DatabaseModule,
   User,
@@ -20,12 +20,13 @@ import {
       validationSchema: Joi.object({
         PORT: Joi.number().required(),
         MONGO_URI: Joi.string().required(),
+        JWT_SECRET: Joi.string().required(),
       }),
     }),
     DatabaseModule,
     DatabaseModule.forFeature([
       { name: User.name, schema: UserSchema },
-      { name: Comapny.name, schema: ComapnySchema },
+      { name: Company.name, schema: CompanySchema },
     ]),
   ],
   controllers: [AuthController],

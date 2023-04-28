@@ -9,12 +9,12 @@ export abstract class AbstractRepository<T extends Document, S extends Record<st
   }
 
   async find(query: FilterQuery<T>, projection?: ProjectionType<T>): Promise<T[]> {
-    const entities = await this.AbstractModel.find(query, projection)
+    const entities = await this.AbstractModel.find(query, projection, { lean: true })
     return entities
   }
 
   async findOne(query: FilterQuery<T>, projection?: ProjectionType<T>): Promise<T> {
-    const entity = await this.AbstractModel.findOne(query, projection)
+    const entity = await this.AbstractModel.findOne(query, projection, { lean: true })
     return entity
   }
 }

@@ -2,10 +2,10 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document } from 'mongoose'
 import { Skill } from 'utils/types'
 
-export type ComapnyDocument = Comapny & Document
+export type CompanyDocument = Company & Document
 
 @Schema({ timestamps: true })
-export class Comapny {
+export class Company {
   @Prop({ required: true })
   name: string
 
@@ -37,4 +37,4 @@ export class Comapny {
   hired?: []
 }
 
-export const ComapnySchema = SchemaFactory.createForClass(Comapny)
+export const CompanySchema = SchemaFactory.createForClass(Company)

@@ -3,6 +3,8 @@ import { AuthService } from './auth.service'
 import { RegisterUserDto } from './dtos/register-user.dto'
 import { RegisterCompanyDto } from './dtos/register-company.dto'
 import { HttpSuccessResponse } from 'utils/interfaces'
+import { LoginUserDto } from './dtos/login-user.dto'
+import { LoginCompanyDto } from './dtos/login-company.dto'
 
 @Controller('auth')
 export class AuthController {
@@ -18,5 +20,17 @@ export class AuthController {
   async httpRegisterCompany(@Body() registerCompanyDto: RegisterCompanyDto): Promise<HttpSuccessResponse> {
     await this.authService.registerCompany(registerCompanyDto)
     return { success: true, message: 'Company registered successfully' }
+  }
+
+  @Post('login/user')
+  async httpLoginUser(@Body() loginUserDto: LoginUserDto): Promise<HttpSuccessResponse> {
+    const user = await this.authService.loginUser(loginUserDto)
+    return { success: true, message: 'User logged in successfully', data: user }
+  }
+
+  @Post('login/company')
+  async httpCompanyUser(@Body() loginCompanyDto: LoginCompanyDto): Promise<HttpSuccessResponse> {
+    const company = await this.authService.loginCompany(loginCompanyDto)
+    return { success: true, message: 'Company logged in successfully', data: company }
   }
 }
