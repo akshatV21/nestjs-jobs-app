@@ -11,6 +11,7 @@ import {
   User,
   UserRepository,
   UserSchema,
+  RmqModule,
 } from '@lib/common'
 
 @Module({
@@ -20,7 +21,10 @@ import {
       validationSchema: Joi.object({
         PORT: Joi.number().required(),
         MONGO_URI: Joi.string().required(),
-        JWT_SECRET: Joi.string().required(),
+        USER_JWT_SECRET: Joi.string().required(),
+        COMPANY_JWT_SECRET: Joi.string().required(),
+        RMQ_URL: Joi.string().required(),
+        RMQ_AUTH_QUEUE: Joi.string().required(),
       }),
     }),
     DatabaseModule,
@@ -28,6 +32,7 @@ import {
       { name: User.name, schema: UserSchema },
       { name: Company.name, schema: CompanySchema },
     ]),
+    RmqModule
   ],
   controllers: [AuthController],
   providers: [AuthService, UserRepository, CompanyRepository],

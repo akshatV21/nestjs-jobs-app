@@ -3,3 +3,8 @@ export interface HttpSuccessResponse {
   message: string
   data?: any
 }
+
+export interface AuthOptions {
+  isLive: boolean
+  isOpen: boolean
+}

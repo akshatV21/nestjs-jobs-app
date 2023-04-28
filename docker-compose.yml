@@ -14,3 +14,10 @@ services:
 
   mongo-server:
     image: mongo
+    logging:
+      driver: none
+
+  rmq-server:
+    image: rabbitmq
+    ports:
+      - '5672:5672'

@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Post } from '@nestjs/common'
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { RegisterUserDto } from './dtos/register-user.dto'
 import { RegisterCompanyDto } from './dtos/register-company.dto'
 import { HttpSuccessResponse } from 'utils/interfaces'
 import { LoginUserDto } from './dtos/login-user.dto'
 import { LoginCompanyDto } from './dtos/login-company.dto'
+import { MessagePattern, Payload } from '@nestjs/microservices'
+import { AuthorizeRPC } from './guards/authorize.guard'
 
 @Controller('auth')
 export class AuthController {
@@ -32,5 +34,12 @@ export class AuthController {
   async httpCompanyUser(@Body() loginCompanyDto: LoginCompanyDto): Promise<HttpSuccessResponse> {
     const company = await this.authService.loginCompany(loginCompanyDto)
     return { success: true, message: 'Company logged in successfully', data: company }
+  }
+
+  @MessagePattern('authorize')
+  @UseGuards(AuthorizeRPC)
+  async authorize(@Payload() payload: any) {
+    const target = payload.parget
+    return { [target]: payload[target], target }
   }
 }

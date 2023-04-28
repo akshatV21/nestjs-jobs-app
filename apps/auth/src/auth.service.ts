@@ -31,7 +31,9 @@ export class AuthService {
     const passwordMatches = compareSync(registeredUser.password, loginUserDto.password)
     if (!passwordMatches) throw new BadRequestException('Invalid password provided.')
 
-    const token = sign({ id: registeredUser.id }, this.configService.get('JWT_SECRET'), { expiresIn: '24h' })
+    const token = sign({ id: registeredUser.id, target: 'user' }, this.configService.get('USER_JWT_SECRET'), {
+      expiresIn: '24h',
+    })
     const { password, ...rest } = registeredUser
 
     return { user: rest, token }
@@ -44,7 +46,9 @@ export class AuthService {
     const passwordMatches = compareSync(registeredCompany.password, loginCompanyDto.password)
     if (!passwordMatches) throw new BadRequestException('Invalid password provided.')
 
-    const token = sign({ id: registeredCompany.id }, this.configService.get('JWT_SECRET'), { expiresIn: '24h' })
+    const token = sign({ id: registeredCompany.id, target: 'company' }, this.configService.get('COMPANY_JWT_SECRET'), {
+      expiresIn: '24h',
+    })
     const { password, ...rest } = registeredCompany
 
     return { company: rest, token }

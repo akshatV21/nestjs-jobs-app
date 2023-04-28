@@ -20,3 +20,8 @@ export const SKILLS = [
 ] as const
 
 export const GENDERS = ['male', 'female', 'transgender'] as const
+
+export const SERVICES = {
+  AUTH_SERVICE: 'AUTH',
+  JOBS_SERVICE: 'JOBS',
+} as const
