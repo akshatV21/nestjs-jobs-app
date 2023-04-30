@@ -28,10 +28,10 @@ export class AuthService {
     const registeredUser = await this.UserRepository.findOne({ email: loginUserDto.email })
     if (!registeredUser) throw new BadRequestException('No user with provided email exists.')
 
-    const passwordMatches = compareSync(registeredUser.password, loginUserDto.password)
+    const passwordMatches = compareSync(loginUserDto.password, registeredUser.password)
     if (!passwordMatches) throw new BadRequestException('Invalid password provided.')
 
-    const token = sign({ id: registeredUser.id, target: 'user' }, this.configService.get('USER_JWT_SECRET'), {
+    const token = sign({ id: registeredUser._id, target: 'user' }, this.configService.get('USER_JWT_SECRET'), {
       expiresIn: '24h',
     })
     const { password, ...rest } = registeredUser
@@ -43,7 +43,7 @@ export class AuthService {
     const registeredCompany = await this.CompanyRepository.findOne({ email: loginCompanyDto.email })
     if (!registeredCompany) throw new BadRequestException('No user with provided email exists.')
 
-    const passwordMatches = compareSync(registeredCompany.password, loginCompanyDto.password)
+    const passwordMatches = compareSync(loginCompanyDto.password, registeredCompany.password)
     if (!passwordMatches) throw new BadRequestException('Invalid password provided.')
 
     const token = sign({ id: registeredCompany.id, target: 'company' }, this.configService.get('COMPANY_JWT_SECRET'), {

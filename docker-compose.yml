@@ -12,6 +12,19 @@ services:
     env_file:
       - ./apps/auth/.env
 
+  jobs:
+    build:
+      context: .
+      dockerfile: ./apps/jobs/Dockerfile
+      target: development
+    command: npm run start:dev jobs
+    ports:
+      - '8081:8081'
+    volumes:
+      - .:/app
+    env_file:
+      - ./apps/jobs/.env
+
   mongo-server:
     image: mongo
     logging:
@@ -19,5 +32,5 @@ services:
 
   rmq-server:
     image: rabbitmq
-    ports:
-      - '5672:5672'
+    logging:
+      driver: none

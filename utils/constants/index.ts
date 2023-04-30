@@ -25,3 +25,5 @@ export const SERVICES = {
   AUTH_SERVICE: 'AUTH',
   JOBS_SERVICE: 'JOBS',
 } as const
+
+export const JOB_TYPES = ['ON_SITE', 'REMOTE', 'HYBRID'] as const

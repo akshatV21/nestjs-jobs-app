@@ -36,10 +36,10 @@ export class AuthController {
     return { success: true, message: 'Company logged in successfully', data: company }
   }
 
-  @MessagePattern('authorize')
   @UseGuards(AuthorizeRPC)
+  @MessagePattern('authorize')
   async authorize(@Payload() payload: any) {
-    const target = payload.parget
+    const target = payload.target
     return { [target]: payload[target], target }
   }
 }

@@ -27,20 +27,20 @@ export class Authorize implements CanActivate {
 
     const request = context.switchToHttp().getRequest()
 
-    const authHeader = request['authorization']
+    const authHeader = request.headers['authorization']
     if (!authHeader) throw new UnauthorizedException('Please log in first.')
 
     const token = authHeader.split(' ')[1]
 
-    return this.AuthClient.send('authenticate', { token }).pipe(
+    return this.AuthClient.send('authorize', { token }).pipe(
       tap(res => {
-        console.log(`RESPONSE - ${res}`)
+        console.log(`RESPONSE - `, res)
         const target = res.target
         request[target] = res[target]
       }),
       map(() => true),
       catchError(err => {
-        console.log('!---------guard error---------!')
+        console.log('!---------guard error---------!', err)
         return of(false)
       }),
     )

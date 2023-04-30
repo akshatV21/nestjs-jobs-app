@@ -1,18 +1,10 @@
 import { Module } from '@nestjs/common'
-import { AuthController } from './auth.controller'
-import { AuthService } from './auth.service'
+import { JobsController } from './jobs.controller'
+import { JobsService } from './jobs.service'
 import { ConfigModule } from '@nestjs/config'
 import * as Joi from 'joi'
-import {
-  Company,
-  CompanySchema,
-  CompanyRepository,
-  DatabaseModule,
-  User,
-  UserRepository,
-  UserSchema,
-  RmqModule,
-} from '@lib/common'
+import { Company, CompanySchema, DatabaseModule, Job, JobSchema, RmqModule } from '@lib/common'
+import { SERVICES } from 'utils/constants'
 
 @Module({
   imports: [
@@ -21,20 +13,19 @@ import {
       validationSchema: Joi.object({
         PORT: Joi.number().required(),
         MONGO_URI: Joi.string().required(),
-        USER_JWT_SECRET: Joi.string().required(),
-        COMPANY_JWT_SECRET: Joi.string().required(),
         RMQ_URL: Joi.string().required(),
         RMQ_AUTH_QUEUE: Joi.string().required(),
+        RMQ_JOBS_QUEUE: Joi.string().required(),
       }),
     }),
     DatabaseModule,
     DatabaseModule.forFeature([
-      { name: User.name, schema: UserSchema },
       { name: Company.name, schema: CompanySchema },
+      { name: Job.name, schema: JobSchema },
     ]),
-    RmqModule,
+    RmqModule.register([SERVICES.AUTH_SERVICE, SERVICES.JOBS_SERVICE]),
   ],
-  controllers: [AuthController],
-  providers: [AuthService, UserRepository, CompanyRepository],
+  controllers: [JobsController],
+  providers: [JobsService],
 })
-export class AuthModule {}
+export class JobsModule {}

@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document } from 'mongoose'
 import { Skill } from 'utils/types'
+import { Job } from './job.model'
 
 export type CompanyDocument = Company & Document
 
@@ -31,7 +32,7 @@ export class Company {
   country: string
 
   @Prop({ default: [] })
-  postings?: Skill[]
+  postings?: Job[]
 
   @Prop({ default: [] })
   hired?: []
