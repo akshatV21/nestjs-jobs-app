@@ -25,6 +25,17 @@ services:
     env_file:
       - ./apps/jobs/.env
 
+  payments:
+    build:
+      context: .
+      dockerfile: ./apps/payments/Dockerfile
+      target: development
+    command: npm run start:dev payments
+    volumes:
+      - .:/app
+    env_file:
+      - ./apps/payments/.env
+
   mongo-server:
     image: mongo
     logging:

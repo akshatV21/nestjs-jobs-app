@@ -12,7 +12,9 @@ import {
   UserRepository,
   UserSchema,
   RmqModule,
+  Authorize,
 } from '@lib/common'
+import { APP_GUARD } from '@nestjs/core'
 
 @Module({
   imports: [

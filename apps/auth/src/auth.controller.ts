@@ -7,6 +7,7 @@ import { LoginUserDto } from './dtos/login-user.dto'
 import { LoginCompanyDto } from './dtos/login-company.dto'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 import { AuthorizeRPC } from './guards/authorize.guard'
+import { Auth, Authorize } from '@lib/common'
 
 @Controller('auth')
 export class AuthController {
@@ -38,7 +39,7 @@ export class AuthController {
 
   @UseGuards(AuthorizeRPC)
   @MessagePattern('authorize')
-  async authorize(@Payload() payload: any) {
+  authorize(@Payload() payload: any) {
     const target = payload.target
     return { [target]: payload[target], target }
   }

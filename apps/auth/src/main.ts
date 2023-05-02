@@ -14,7 +14,7 @@ async function bootstrap() {
 
   const PORT = configService.get('PORT')
 
-  app.connectMicroservice(rmqService.getOptions('AUTH', true))
+  app.connectMicroservice(rmqService.getOptions('AUTH'))
   app.useGlobalPipes(new ValidationPipe())
 
   app.use(helmet())

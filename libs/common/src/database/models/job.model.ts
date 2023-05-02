@@ -31,6 +31,9 @@ export class Job {
 
   @Prop({ default: [] })
   applications: []
+
+  @Prop({ required: true })
+  transactionId: string
 }
 
 export const JobSchema = SchemaFactory.createForClass(Job)
