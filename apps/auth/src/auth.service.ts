@@ -41,7 +41,7 @@ export class AuthService {
 
   async loginCompany(loginCompanyDto: LoginCompanyDto) {
     const registeredCompany = await this.CompanyRepository.findOne({ email: loginCompanyDto.email })
-    if (!registeredCompany) throw new BadRequestException('No user with provided email exists.')
+    if (!registeredCompany) throw new BadRequestException('No company with provided email exists.')
 
     const passwordMatches = compareSync(loginCompanyDto.password, registeredCompany.password)
     if (!passwordMatches) throw new BadRequestException('Invalid password provided.')

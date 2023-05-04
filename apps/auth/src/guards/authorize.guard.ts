@@ -19,7 +19,7 @@ export class AuthorizeRPC implements CanActivate {
     if (!token) throw new RpcException('No token was provided')
 
     const { id, target } = this.validateToken(token)
-    
+
     if (target === 'user') data.user = await this.UserRepository.findOne({ _id: id })
     else if (target === 'company') data.company = await this.CompanyRepository.findOne({ _id: id })
 

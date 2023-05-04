@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document } from 'mongoose'
 import { Skill } from 'utils/types'
 import { Job } from './job.model'
+import { hashSync } from 'bcrypt'
 
 export type CompanyDocument = Company & Document
 
@@ -38,4 +39,15 @@ export class Company {
   hired?: []
 }
 
-export const CompanySchema = SchemaFactory.createForClass(Company)
+const CompanySchema = SchemaFactory.createForClass(Company)
+
+CompanySchema.pre('save', function (next) {
+  if (!this.isModified('password')) return next()
+
+  const hashedPassword = hashSync(this.password, 4)
+  this.password = hashedPassword
+
+  return next()
+})
+
+export { CompanySchema }
