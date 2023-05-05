@@ -27,7 +27,7 @@ export class Authorize implements CanActivate {
   }
 
   private authorizeHttpRequest(context: ExecutionContext) {
-    const { isOpen, isLive } = this.reflector.get<AuthOptions>('authOptions', context.getHandler())
+    const { isOpen, isLive, target } = this.reflector.get<AuthOptions>('authOptions', context.getHandler())
 
     if (!isLive) throw new InternalServerErrorException('This endpoint is currently under mainatainence.')
     if (isOpen) return true
@@ -38,11 +38,11 @@ export class Authorize implements CanActivate {
     if (!authHeader) throw new UnauthorizedException('Please log in first.')
 
     const token = authHeader.split(' ')[1]
-    return this.sendAuthorizeMessage(token, request)
+    return this.sendAuthorizeMessage(token, request, target)
   }
 
   private authorizeRpcRequest(context: ExecutionContext) {
-    const { isOpen, isLive } = this.reflector.get<AuthOptions>('authOptions', context.getHandler())
+    const { isOpen, isLive, target } = this.reflector.get<AuthOptions>('authOptions', context.getHandler())
 
     if (!isLive) throw new RpcException('This endpoint is currently under mainatainence.')
     if (isOpen) return true
@@ -50,18 +50,19 @@ export class Authorize implements CanActivate {
     const request = context.switchToRpc().getData()
 
     const token = request.token
-    return this.sendAuthorizeMessage(token, request)
+    return this.sendAuthorizeMessage(token, request, target)
   }
 
-  private sendAuthorizeMessage(token: string, request: any) {
-    return this.AuthClient.send('authorize', { token }).pipe(
+  private sendAuthorizeMessage(token: string, request: any, target: string) {
+    return this.AuthClient.send('authorize', { token, target }).pipe(
       tap(res => {
-        const target = res.target
         request[target] = res[target]
         request['token'] = token
       }),
       map(() => true),
-      catchError(err => of(false)),
+      catchError(err => {
+        return of(false)
+      }),
     )
   }
 }
