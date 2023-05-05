@@ -6,6 +6,7 @@ import * as Joi from 'joi'
 import { Authorize, Company, CompanySchema, DatabaseModule, Job, JobSchema, RmqModule } from '@lib/common'
 import { SERVICES } from 'utils/constants'
 import { APP_GUARD } from '@nestjs/core'
+import { JobRepository } from '@lib/common/database/repositories/job.repository'
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { APP_GUARD } from '@nestjs/core'
         RMQ_URL: Joi.string().required(),
         RMQ_AUTH_QUEUE: Joi.string().required(),
         RMQ_JOBS_QUEUE: Joi.string().required(),
+        RMQ_PAYMENTS_QUEUE: Joi.string().required(),
       }),
     }),
     DatabaseModule,
@@ -24,9 +26,9 @@ import { APP_GUARD } from '@nestjs/core'
       { name: Company.name, schema: CompanySchema },
       { name: Job.name, schema: JobSchema },
     ]),
-    RmqModule.register([SERVICES.AUTH_SERVICE, SERVICES.JOBS_SERVICE]),
+    RmqModule.register([SERVICES.AUTH_SERVICE, SERVICES.JOBS_SERVICE, SERVICES.PAYMENTS_SERVICE]),
   ],
   controllers: [JobsController],
-  providers: [JobsService, { provide: APP_GUARD, useClass: Authorize }],
+  providers: [JobsService, { provide: APP_GUARD, useClass: Authorize }, JobRepository],
 })
 export class JobsModule {}

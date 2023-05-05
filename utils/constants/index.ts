@@ -28,3 +28,8 @@ export const SERVICES = {
 } as const
 
 export const JOB_TYPES = ['ON_SITE', 'REMOTE', 'HYBRID'] as const
+
+export const TARGETS = {
+  USER: 'user',
+  COMPANY: 'company',
+} as const

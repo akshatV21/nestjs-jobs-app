@@ -1,4 +1,5 @@
 import { CompanyDocument, UserDocument } from '@lib/common'
+import { Target } from 'utils/types'
 
 export interface HttpSuccessResponse {
   success: true
@@ -9,12 +10,12 @@ export interface HttpSuccessResponse {
 export interface AuthOptions {
   isLive?: boolean
   isOpen?: boolean
-  target?: string
+  target?: Target
 }
 
 export interface AuthPayload {
-  token: string
-  target: string
+  token?: string
+  target?: Target
   user?: UserDocument
   company?: CompanyDocument
 }

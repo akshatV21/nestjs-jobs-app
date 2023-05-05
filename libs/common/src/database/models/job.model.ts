@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document, Types } from 'mongoose'
 import { Company } from './company.model'
-import { JobType, Skill } from 'utils/types'
+import { JobType, JobTypeLowerCase, Skill } from 'utils/types'
 import { JOB_TYPES } from 'utils/constants'
 
 export type JobDocument = Job & Document
@@ -21,16 +21,16 @@ export class Job {
   body: string
 
   @Prop({ default: 'unpaid', type: String })
-  pay: string
+  pay?: string
 
   @Prop({ default: JOB_TYPES[0], type: String })
-  type: JobType
+  type?: JobTypeLowerCase
 
   @Prop({ default: [] })
-  tags: Skill[]
+  tags?: Skill[]
 
   @Prop({ default: [] })
-  applications: []
+  applications?: []
 
   @Prop({ required: true })
   transactionId: string

@@ -1,8 +1,8 @@
 import { IsCreditCard, IsNotEmpty, IsNumber, IsString } from '@nestjs/class-validator'
 
 export class CardDto {
-  @IsString()
   @IsNotEmpty()
+  @IsString()
   cvc: string
 
   @IsNumber()

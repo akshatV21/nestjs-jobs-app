@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common'
 import { PaymentsController } from './payments.controller'
 import { PaymentsService } from './payments.service'
-import { RmqModule } from '@lib/common'
+import { Authorize, RmqModule } from '@lib/common'
 import { ConfigModule } from '@nestjs/config'
 import * as Joi from 'joi'
+import { APP_GUARD } from '@nestjs/core'
+import { SERVICES } from 'utils/constants'
 
 @Module({
   imports: [
@@ -15,9 +17,9 @@ import * as Joi from 'joi'
         STRIPE_SECRET_KEY: Joi.string().required(),
       }),
     }),
-    RmqModule,
+    RmqModule.register([SERVICES.AUTH_SERVICE]),
   ],
   controllers: [PaymentsController],
-  providers: [PaymentsService],
+  providers: [PaymentsService, { provide: APP_GUARD, useClass: Authorize }],
 })
 export class PaymentsModule {}

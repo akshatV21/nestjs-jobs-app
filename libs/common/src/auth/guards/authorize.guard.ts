@@ -1,5 +1,7 @@
+import { RpcDto } from '@lib/common/dtos/rpc.dto'
 import {
   CanActivate,
+  ContextType,
   ExecutionContext,
   Inject,
   Injectable,
@@ -11,6 +13,7 @@ import { ClientProxy, RpcException } from '@nestjs/microservices'
 import { Observable, catchError, map, of, tap } from 'rxjs'
 import { SERVICES } from 'utils/constants'
 import { AuthOptions } from 'utils/interfaces'
+import { Target } from 'utils/types'
 
 @Injectable()
 export class Authorize implements CanActivate {
@@ -38,7 +41,7 @@ export class Authorize implements CanActivate {
     if (!authHeader) throw new UnauthorizedException('Please log in first.')
 
     const token = authHeader.split(' ')[1]
-    return this.sendAuthorizeMessage(token, request, target)
+    return this.sendAuthorizeMessage(token, request, target, 'http')
   }
 
   private authorizeRpcRequest(context: ExecutionContext) {
@@ -50,11 +53,11 @@ export class Authorize implements CanActivate {
     const request = context.switchToRpc().getData()
 
     const token = request.token
-    return this.sendAuthorizeMessage(token, request, target)
+    return this.sendAuthorizeMessage(token, request, target, 'rpc')
   }
 
-  private sendAuthorizeMessage(token: string, request: any, target: string) {
-    return this.AuthClient.send('authorize', { token, target }).pipe(
+  private sendAuthorizeMessage(token: string, request: any, target: Target, type: ContextType) {
+    return this.AuthClient.send<any, RpcDto>('authorize', { token, target, type }).pipe(
       tap(res => {
         request[target] = res[target]
         request['token'] = token
