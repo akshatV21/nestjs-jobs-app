@@ -3,7 +3,7 @@ import { JobsController } from './jobs.controller'
 import { JobsService } from './jobs.service'
 import { ConfigModule } from '@nestjs/config'
 import * as Joi from 'joi'
-import { Authorize, Company, CompanySchema, DatabaseModule, Job, JobSchema, RmqModule } from '@lib/common'
+import { Authorize, Company, CompanyRepository, CompanySchema, DatabaseModule, Job, JobSchema, RmqModule } from '@lib/common'
 import { SERVICES } from 'utils/constants'
 import { APP_GUARD } from '@nestjs/core'
 import { JobRepository } from '@lib/common/database/repositories/job.repository'
@@ -29,6 +29,6 @@ import { JobRepository } from '@lib/common/database/repositories/job.repository'
     RmqModule.register([SERVICES.AUTH_SERVICE, SERVICES.JOBS_SERVICE, SERVICES.PAYMENTS_SERVICE]),
   ],
   controllers: [JobsController],
-  providers: [JobsService, { provide: APP_GUARD, useClass: Authorize }, JobRepository],
+  providers: [JobsService, { provide: APP_GUARD, useClass: Authorize }, JobRepository, CompanyRepository],
 })
 export class JobsModule {}

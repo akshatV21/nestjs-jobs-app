@@ -1,13 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { Document } from 'mongoose'
+import { Document, Types } from 'mongoose'
 import { Skill } from 'utils/types'
 import { Job } from './job.model'
 import { hashSync } from 'bcrypt'
+import { AbstractSchema } from '../abstract.schema'
 
 export type CompanyDocument = Company & Document
 
 @Schema({ timestamps: true })
-export class Company {
+export class Company extends AbstractSchema {
   @Prop({ required: true })
   name: string
 
@@ -33,7 +34,7 @@ export class Company {
   country: string
 
   @Prop({ default: [] })
-  postings?: Job[]
+  postings?: Types.ObjectId[]
 
   @Prop({ default: [] })
   hired?: []

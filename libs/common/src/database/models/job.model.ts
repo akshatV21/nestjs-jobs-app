@@ -3,11 +3,12 @@ import { Document, Types } from 'mongoose'
 import { Company } from './company.model'
 import { JobType, JobTypeLowerCase, Skill } from 'utils/types'
 import { JOB_TYPES } from 'utils/constants'
+import { AbstractSchema } from '../abstract.schema'
 
 export type JobDocument = Job & Document
 
 @Schema({ timestamps: true })
-export class Job {
+export class Job extends AbstractSchema {
   @Prop({ required: true, ref: Company.name })
   company: Types.ObjectId
 

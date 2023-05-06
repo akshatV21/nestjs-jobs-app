@@ -23,7 +23,7 @@ export class AuthController {
   }
   
   @Post('register/company')
-  @Auth({ isOpen: true })
+  @Auth({ isOpen: true, target: 'company' })
   @UseGuards(UniqueEmailGuard)
   async httpRegisterCompany(@Body() registerCompanyDto: RegisterCompanyDto): Promise<HttpSuccessResponse> {
     await this.authService.registerCompany(registerCompanyDto)
@@ -38,7 +38,7 @@ export class AuthController {
   }
   
   @Post('login/company')
-  @Auth({ isOpen: true })
+  @Auth({ isOpen: true, target: 'company' })
   async httpCompanyUser(@Body() loginCompanyDto: LoginCompanyDto): Promise<HttpSuccessResponse> {
     const company = await this.authService.loginCompany(loginCompanyDto)
     return { success: true, message: 'Company logged in successfully', data: company }

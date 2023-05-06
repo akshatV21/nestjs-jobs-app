@@ -2,11 +2,12 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { hashSync } from 'bcrypt'
 import { Document } from 'mongoose'
 import { Gender, Skill } from 'utils/types'
+import { AbstractSchema } from '../abstract.schema'
 
 export type UserDocument = User & Document
 
 @Schema({ timestamps: true })
-export class User {
+export class User extends AbstractSchema {
   @Prop({ required: true })
   firstName: string
 

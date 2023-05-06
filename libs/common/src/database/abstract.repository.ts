@@ -1,20 +1,26 @@
-import { Document, FilterQuery, Model, ProjectionType } from 'mongoose'
+import { Document, FilterQuery, Model, ProjectionType, Types, UpdateQuery } from 'mongoose'
 
 export abstract class AbstractRepository<T extends Document, S extends Record<string, any>> {
   constructor(protected readonly AbstractModel: Model<T>) {}
 
-  async create(createDto: S): Promise<T> {
-    const entity = new this.AbstractModel(createDto)
+  async create(createDto: S, id?: Types.ObjectId): Promise<T> {
+    const entity = new this.AbstractModel({ ...createDto, _id: id ?? new Types.ObjectId() })
     return entity.save()
   }
 
   async find(query: FilterQuery<T>, projection?: ProjectionType<T>): Promise<T[]> {
-    const entities = await this.AbstractModel.find(query, projection, { lean: true })
-    return entities
+    return await this.AbstractModel.find(query, projection, { lean: true })
   }
 
   async findOne(query: FilterQuery<T>, projection?: ProjectionType<T>): Promise<T> {
-    const entity = await this.AbstractModel.findOne(query, projection, { lean: true })
-    return entity
+    return this.AbstractModel.findOne(query, projection, { lean: true })
+  }
+
+  async findById(id: string | Types.ObjectId) {
+    return this.AbstractModel.findById(id)
+  }
+
+  async update(id: string | Types.ObjectId, updateDto: UpdateQuery<T>) {
+    return this.AbstractModel.findByIdAndUpdate(id, updateDto, { new: true })
   }
 }

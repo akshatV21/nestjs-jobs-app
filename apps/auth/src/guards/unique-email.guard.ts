@@ -19,7 +19,7 @@ export class UniqueEmailGuard implements CanActivate {
     let entity: UserDocument | CompanyDocument
     if (target === 'user') entity = await this.UserRepository.findOne({ email: email })
     else if (target === 'company') entity = await this.CompanyRepository.findOne({ email: email })
-
+    
     if (entity) throw new BadRequestException(`Email is already in use for another ${target}.`)
     return true
   }

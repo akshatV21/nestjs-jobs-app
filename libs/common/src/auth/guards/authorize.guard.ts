@@ -30,7 +30,6 @@ export class Authorize implements CanActivate {
   }
 
   private authorizeHttpRequest(context: ExecutionContext) {
-    console.log('http')
     const { isOpen, isLive, target } = this.reflector.get<AuthOptions>('authOptions', context.getHandler())
     
     if (!isLive) throw new InternalServerErrorException('This endpoint is currently under mainatainence.')
@@ -46,7 +45,6 @@ export class Authorize implements CanActivate {
   }
 
   private authorizeRpcRequest(context: ExecutionContext) {
-    console.log('rpc')
     const { isOpen, isLive, target } = this.reflector.get<AuthOptions>('authOptions', context.getHandler())
 
     if (!isLive) throw new RpcException('This endpoint is currently under mainatainence.')

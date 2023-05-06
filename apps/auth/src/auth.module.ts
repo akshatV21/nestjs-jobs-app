@@ -15,6 +15,7 @@ import {
   Authorize,
 } from '@lib/common'
 import { APP_GUARD } from '@nestjs/core'
+import { SERVICES } from 'utils/constants'
 
 @Module({
   imports: [
@@ -34,7 +35,7 @@ import { APP_GUARD } from '@nestjs/core'
       { name: User.name, schema: UserSchema },
       { name: Company.name, schema: CompanySchema },
     ]),
-    RmqModule,
+    RmqModule.register([SERVICES.AUTH_SERVICE]),
   ],
   controllers: [AuthController],
   providers: [AuthService, UserRepository, CompanyRepository, { provide: APP_GUARD, useClass: Authorize }],
