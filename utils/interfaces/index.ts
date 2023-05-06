@@ -1,4 +1,5 @@
 import { CompanyDocument, UserDocument } from '@lib/common'
+import { ContextType } from '@nestjs/common'
 import { Target } from 'utils/types'
 
 export interface HttpSuccessResponse {
@@ -18,4 +19,5 @@ export interface AuthPayload {
   target?: Target
   user?: UserDocument
   company?: CompanyDocument
+  type?: ContextType
 }

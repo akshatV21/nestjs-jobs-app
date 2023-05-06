@@ -15,7 +15,7 @@ export class JobsService {
   ) {}
 
   create(createJobDto: CreateJobDto, company: CompanyDocument, token: string) {
-    return this.paymentClient.send<any, PaymentDto>('new-payment', { ...createJobDto.payment }).pipe(
+    return this.paymentClient.send('new-payment', { ...createJobDto.payment, token }).pipe(
       map(res => {
         return this.JobRepository.create({ ...createJobDto, company: company._id, transactionId: res.id })
       }),

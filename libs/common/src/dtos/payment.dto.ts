@@ -3,7 +3,7 @@ import { IsNotEmpty, IsNotEmptyObject, IsNumber, ValidateNested } from '@nestjs/
 import { CardDto } from './card.dto'
 import { RpcDto } from './rpc.dto'
 
-export class PaymentDto extends RpcDto {
+export class PaymentDto {
   @IsNotEmpty()
   @IsNotEmptyObject()
   @ValidateNested()
