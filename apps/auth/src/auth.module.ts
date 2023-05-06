@@ -37,6 +37,6 @@ import { APP_GUARD } from '@nestjs/core'
     RmqModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, UserRepository, CompanyRepository],
+  providers: [AuthService, UserRepository, CompanyRepository, { provide: APP_GUARD, useClass: Authorize }],
 })
 export class AuthModule {}
