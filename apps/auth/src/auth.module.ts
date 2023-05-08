@@ -24,8 +24,7 @@ import { SERVICES } from 'utils/constants'
       validationSchema: Joi.object({
         PORT: Joi.number().required(),
         MONGO_URI: Joi.string().required(),
-        USER_JWT_SECRET: Joi.string().required(),
-        COMPANY_JWT_SECRET: Joi.string().required(),
+        JWT_SECRET: Joi.string().required(),
         RMQ_URL: Joi.string().required(),
         RMQ_AUTH_QUEUE: Joi.string().required(),
       }),

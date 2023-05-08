@@ -32,4 +32,12 @@ export const JOB_TYPES = ['ON_SITE', 'REMOTE', 'HYBRID'] as const
 export const TARGETS = {
   USER: 'user',
   COMPANY: 'company',
+  BOTH: 'both'
+} as const
+
+export const EXCEPTION_MSGS = {
+  NULL_TOKEN: 'TokenNotProvided',
+  UNAUTHORIZED: 'UnauthorizedAccess',
+  JWT_EXPIRED: 'JwtExpired',
+  INVALID_JWT: 'InvalidJwt',
 } as const

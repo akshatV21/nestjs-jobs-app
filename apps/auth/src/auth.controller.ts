@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { RegisterUserDto } from './dtos/register-user.dto'
 import { RegisterCompanyDto } from './dtos/register-company.dto'
@@ -21,7 +21,7 @@ export class AuthController {
     await this.authService.registerUser(registerUserDto)
     return { success: true, message: 'User registered successfully' }
   }
-  
+
   @Post('register/company')
   @Auth({ isOpen: true, target: 'company' })
   @UseGuards(UniqueEmailGuard)
@@ -29,19 +29,25 @@ export class AuthController {
     await this.authService.registerCompany(registerCompanyDto)
     return { success: true, message: 'Company registered successfully' }
   }
-  
+
   @Post('login/user')
   @Auth({ isOpen: true })
   async httpLoginUser(@Body() loginUserDto: LoginUserDto): Promise<HttpSuccessResponse> {
     const user = await this.authService.loginUser(loginUserDto)
     return { success: true, message: 'User logged in successfully', data: user }
   }
-  
+
   @Post('login/company')
-  @Auth({ isOpen: true, target: 'company' })
+  @Auth({ isOpen: true, target: 'company', isLive: false })
   async httpCompanyUser(@Body() loginCompanyDto: LoginCompanyDto): Promise<HttpSuccessResponse> {
     const company = await this.authService.loginCompany(loginCompanyDto)
     return { success: true, message: 'Company logged in successfully', data: company }
+  }
+
+  @Get('me')
+  @Auth({ target: 'both' })
+  httpReturnLoggedInEntity(@Req() request: any) {
+    return { success: true, message: 'Entity fetched successfully', data: { entity: request.user ?? request.company } }
   }
 
   @UseGuards(AuthorizeRPC)
