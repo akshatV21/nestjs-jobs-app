@@ -35,4 +35,8 @@ export class JobsService {
       }),
     )
   }
+
+  async getById(id: Types.ObjectId) {
+    return await this.JobRepository.findById(id, {}, { path: 'company', select: 'name description avatar website state country' })
+  }
 }

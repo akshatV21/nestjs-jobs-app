@@ -33,7 +33,7 @@ export class Company extends AbstractSchema {
   @Prop({ required: true })
   country: string
 
-  @Prop({ default: [] })
+  @Prop({ default: [], ref: Job.name })
   postings?: Types.ObjectId[]
 
   @Prop({ default: [] })

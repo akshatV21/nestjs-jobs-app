@@ -9,7 +9,7 @@ export type JobDocument = Job & Document
 
 @Schema({ timestamps: true })
 export class Job extends AbstractSchema {
-  @Prop({ required: true, ref: Company.name })
+  @Prop({ required: true, ref: 'Company' })
   company: Types.ObjectId
 
   @Prop({ required: true })
