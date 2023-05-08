@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, Param, Post, Req, UseGuards, UseInterceptors } from '@nestjs/common'
 import { JobsService } from './jobs.service'
-import { Auth, CompanyDocument, ReqCompany, Token } from '@lib/common'
+import { Auth, CompanyDocument, HttpRedisCacheInterceptor, ReqCompany, Token } from '@lib/common'
 import { CreateJobDto } from './dtos/create-job.dto'
 import { Types } from 'mongoose'
 import { ParseObjectId } from 'utils/pipes/objectId.pipe'
@@ -23,6 +23,7 @@ export class JobsController {
   @Get(':id')
   @Auth({ target: 'company' })
   async httpGetJobPost(@Param('id', ParseObjectId) jobPostId: Types.ObjectId) {
+    console.log('in')
     const jobPost = await this.jobsService.getById(jobPostId)
     return { success: true, message: 'Job post fetched successfully.', data: { job: jobPost } }
   }

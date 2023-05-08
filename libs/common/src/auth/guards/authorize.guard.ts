@@ -62,6 +62,7 @@ export class Authorize implements CanActivate {
       tap(res => {
         request[res.target] = res[res.target]
         request['token'] = token
+        request.target = res.target
       }),
       map(() => true),
       catchError(err => {

@@ -45,3 +45,8 @@ services:
     image: rabbitmq
     logging:
       driver: none
+
+  redis-server:
+    image: redis
+    logging:
+      driver: none
