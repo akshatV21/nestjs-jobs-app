@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { hashSync } from 'bcrypt'
-import { Document } from 'mongoose'
+import { Document, Types } from 'mongoose'
 import { Gender, Skill } from 'utils/types'
 import { AbstractSchema } from '../abstract.schema'
 
@@ -33,7 +33,7 @@ export class User extends AbstractSchema {
   skills?: Skill[]
 
   @Prop({ default: [] })
-  applications?: []
+  applications?: Types.ObjectId[]
 }
 
 const UserSchema = SchemaFactory.createForClass(User)

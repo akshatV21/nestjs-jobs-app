@@ -38,7 +38,7 @@ export class AuthController {
   }
 
   @Post('login/company')
-  @Auth({ isOpen: true, target: 'company', isLive: false })
+  @Auth({ isOpen: true, target: 'company' })
   async httpCompanyUser(@Body() loginCompanyDto: LoginCompanyDto): Promise<HttpSuccessResponse> {
     const company = await this.authService.loginCompany(loginCompanyDto)
     return { success: true, message: 'Company logged in successfully', data: company }

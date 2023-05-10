@@ -31,7 +31,7 @@ export class Job extends AbstractSchema {
   tags?: Skill[]
 
   @Prop({ default: [] })
-  applications?: []
+  applications?: Types.ObjectId[]
 
   @Prop({ required: true })
   transactionId: string

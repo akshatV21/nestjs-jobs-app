@@ -14,6 +14,9 @@ import {
   JobSchema,
   RedisCacheModule,
   RmqModule,
+  User,
+  UserRepository,
+  UserSchema,
 } from '@lib/common'
 import { SERVICES } from 'utils/constants'
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
@@ -38,6 +41,7 @@ import * as redisStore from 'cache-manager-redis-store'
     }),
     DatabaseModule,
     DatabaseModule.forFeature([
+      { name: User.name, schema: UserSchema },
       { name: Company.name, schema: CompanySchema },
       { name: Job.name, schema: JobSchema },
     ]),
@@ -55,6 +59,7 @@ import * as redisStore from 'cache-manager-redis-store'
     { provide: APP_GUARD, useClass: Authorize },
     JobRepository,
     CompanyRepository,
+    UserRepository,
     { provide: APP_INTERCEPTOR, useClass: HttpRedisCacheInterceptor },
   ],
 })
