@@ -32,7 +32,7 @@ export const JOB_TYPES = ['ON_SITE', 'REMOTE', 'HYBRID'] as const
 export const TARGETS = {
   USER: 'user',
   COMPANY: 'company',
-  BOTH: 'both'
+  BOTH: 'both',
 } as const
 
 export const EXCEPTION_MSGS = {
@@ -40,4 +40,10 @@ export const EXCEPTION_MSGS = {
   UNAUTHORIZED: 'UnauthorizedAccess',
   JWT_EXPIRED: 'JwtExpired',
   INVALID_JWT: 'InvalidJwt',
+} as const
+
+export const APPLICATION_STATUSES = {
+  ACCEPTED: 'accepted',
+  DECLINED: 'declined',
+  IN_PROCESS: 'in-process',
 } as const

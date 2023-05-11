@@ -5,6 +5,7 @@ import { CreateJobDto } from './dtos/create-job.dto'
 import { Types } from 'mongoose'
 import { ParseObjectId } from 'utils/pipes/objectId.pipe'
 import { map } from 'rxjs'
+import { ApplicationDto } from './dtos/create-application.dto'
 
 @Controller('jobs')
 export class JobsController {
@@ -22,16 +23,30 @@ export class JobsController {
   }
 
   @Get(':id')
-  @Auth({ target: 'company' })
+  @Auth({ target: 'both' })
   async httpGetJobPost(@Param('id', ParseObjectId) jobPostId: Types.ObjectId) {
     const jobPost = await this.jobsService.getById(jobPostId)
     return { success: true, message: 'Job post fetched successfully.', data: { job: jobPost } }
   }
 
-  @Post('apply/:id')
+  @Post(':id/applications')
   @Auth({ target: 'user' })
-  async httpApplyForJob(@Param('id', ParseObjectId) jobPostId: Types.ObjectId, @ReqUser() user: UserDocument) {
-    await this.jobsService.apply(jobPostId, user)
-    return { success: true, message: 'Applied to job successfully.' }
+  async httpApplyForJob(
+    @Param('id', ParseObjectId) jobPostId: Types.ObjectId,
+    @ReqUser() user: UserDocument,
+    @Body() applicationDto: ApplicationDto,
+  ) {
+    const application = await this.jobsService.apply(jobPostId, user, applicationDto)
+    return { success: true, message: 'Applied to job successfully.', data: { application } }
+  }
+
+  @Get(':id/applications')
+  @Auth({ target: 'company' })
+  async httpGetJobApplications(
+    @Param('id', ParseObjectId) jobPostId: Types.ObjectId,
+    @ReqCompany() company: CompanyDocument,
+  ) {
+    const applications = await this.jobsService.getApplications(jobPostId, company)
+    return { success: true, message: 'Applicatiosn fetched successfully', data: { applications } }
   }
 }

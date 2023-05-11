@@ -1,5 +1,5 @@
 import { CompanyRepository, UserRepository } from '@lib/common'
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { RpcException } from '@nestjs/microservices'
 import { verify } from 'jsonwebtoken'
@@ -30,6 +30,8 @@ export class AuthorizeRPC implements CanActivate {
     else if (data.target === 'company') data.company = await this.CompanyRepository.findById(new Types.ObjectId(id))
     else if (data.target === 'both' && target === 'user') data.user = await this.UserRepository.findById(new Types.ObjectId(id))
     else if (data.target === 'both' && target === 'company') data.company = await this.CompanyRepository.findById(new Types.ObjectId(id))
+
+    if (!data[target]) throw new RpcException('Invalid Token.')
 
     data.target = target
     return true

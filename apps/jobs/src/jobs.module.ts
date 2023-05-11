@@ -4,6 +4,8 @@ import { JobsService } from './jobs.service'
 import { ConfigModule } from '@nestjs/config'
 import * as Joi from 'joi'
 import {
+  Application,
+  ApplicationSchema,
   Authorize,
   Company,
   CompanyRepository,
@@ -23,6 +25,7 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
 import { JobRepository } from '@lib/common/database/repositories/job.repository'
 import { CacheModule, CacheStore } from '@nestjs/cache-manager'
 import * as redisStore from 'cache-manager-redis-store'
+import { ApplicationRepository } from '@lib/common/database/repositories/application.repository'
 
 @Module({
   imports: [
@@ -44,6 +47,7 @@ import * as redisStore from 'cache-manager-redis-store'
       { name: User.name, schema: UserSchema },
       { name: Company.name, schema: CompanySchema },
       { name: Job.name, schema: JobSchema },
+      { name: Application.name, schema: ApplicationSchema },
     ]),
     RmqModule.register([SERVICES.AUTH_SERVICE, SERVICES.JOBS_SERVICE, SERVICES.PAYMENTS_SERVICE]),
     CacheModule.register({
@@ -60,6 +64,7 @@ import * as redisStore from 'cache-manager-redis-store'
     JobRepository,
     CompanyRepository,
     UserRepository,
+    ApplicationRepository,
     { provide: APP_INTERCEPTOR, useClass: HttpRedisCacheInterceptor },
   ],
 })

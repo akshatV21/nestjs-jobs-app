@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common'
+import { BadRequestException, ForbiddenException, Inject, Injectable } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
 import { SERVICES } from 'utils/constants'
 import { CreateJobDto } from './dtos/create-job.dto'
@@ -6,6 +6,8 @@ import { lastValueFrom, map } from 'rxjs'
 import { JobRepository } from '@lib/common/database/repositories/job.repository'
 import { CompanyDocument, CompanyRepository, PaymentDto, UserDocument, UserRepository } from '@lib/common'
 import { Types } from 'mongoose'
+import { ApplicationRepository } from '@lib/common/database/repositories/application.repository'
+import { ApplicationDto } from './dtos/create-application.dto'
 
 @Injectable()
 export class JobsService {
@@ -14,6 +16,7 @@ export class JobsService {
     private readonly JobRepository: JobRepository,
     private readonly CompanyRepository: CompanyRepository,
     private readonly UserRepository: UserRepository,
+    private readonly ApplicationRepository: ApplicationRepository,
   ) {}
 
   async create(createJobDto: CreateJobDto, company: CompanyDocument, token: string) {
@@ -39,12 +42,27 @@ export class JobsService {
     )
   }
 
-  async apply(jobPostId: Types.ObjectId, user: UserDocument) {
-    if (user.applications.includes(user._id)) throw new BadRequestException('Already applied to this job post.')
+  async apply(jobPostId: Types.ObjectId, user: UserDocument, { message }: ApplicationDto) {
+    const existingJobApplication = await this.ApplicationRepository.findOne({ job: jobPostId, user: user._id })
+    if (existingJobApplication) throw new BadRequestException('You have already applied to this job post.')
 
-    const jobUpdatePromise = this.JobRepository.update(jobPostId, { $push: { applications: user._id } })
-    const userUpdatePromise = this.UserRepository.update(user._id, { $push: { applications: jobPostId } })
+    const applicationObjectId = new Types.ObjectId()
+    const createApplicationPromise = this.ApplicationRepository.create(
+      { job: jobPostId, user: user._id, message },
+      applicationObjectId,
+    )
+    const updateUserPromise = this.UserRepository.update(user._id, { $push: { applications: applicationObjectId } })
+    const updateJobPostPromise = this.JobRepository.update(jobPostId, { $push: { applications: applicationObjectId } })
 
-    await Promise.all([jobUpdatePromise, userUpdatePromise])
+    const [application] = await Promise.all([createApplicationPromise, updateUserPromise, updateJobPostPromise])
+    return application
+  }
+
+  async getApplications(jobPostId: Types.ObjectId, company: CompanyDocument) {
+    const jobPostExists = company.postings.find(postId => jobPostId.equals(postId))
+    if (!jobPostExists) throw new ForbiddenException('You are forbidden to make this request.')
+
+    const applications = await this.ApplicationRepository.find({ job: jobPostId })
+    return applications
   }
 }
