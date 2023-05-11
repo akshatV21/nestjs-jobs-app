@@ -19,6 +19,7 @@ export class HttpRedisCacheInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       tap(async res => {
+        console.log('cached')
         await this.cacheService.set(key, res)
       }),
     )

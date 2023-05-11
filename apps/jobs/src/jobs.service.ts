@@ -65,4 +65,12 @@ export class JobsService {
     const applications = await this.ApplicationRepository.find({ job: jobPostId })
     return applications
   }
+
+  async getApplication(jobPostId: Types.ObjectId, applicationId: Types.ObjectId, company: CompanyDocument) {
+    const jobPostExists = company.postings.find(postId => jobPostId.equals(postId))
+    if (!jobPostExists) throw new ForbiddenException('You are forbidden to make this request.')
+
+    const application = await this.ApplicationRepository.findById(applicationId, {}, { path: 'user' })
+    return application
+  }
 }

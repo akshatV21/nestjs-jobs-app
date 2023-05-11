@@ -1,6 +1,15 @@
 import { Body, Controller, Get, Param, Post, Req, UseGuards, UseInterceptors } from '@nestjs/common'
 import { JobsService } from './jobs.service'
-import { Auth, CompanyDocument, HttpRedisCacheInterceptor, ReqCompany, ReqUser, Token, UserDocument } from '@lib/common'
+import {
+  Auth,
+  Company,
+  CompanyDocument,
+  HttpRedisCacheInterceptor,
+  ReqCompany,
+  ReqUser,
+  Token,
+  UserDocument,
+} from '@lib/common'
 import { CreateJobDto } from './dtos/create-job.dto'
 import { Types } from 'mongoose'
 import { ParseObjectId } from 'utils/pipes/objectId.pipe'
@@ -47,6 +56,17 @@ export class JobsController {
     @ReqCompany() company: CompanyDocument,
   ) {
     const applications = await this.jobsService.getApplications(jobPostId, company)
-    return { success: true, message: 'Applicatiosn fetched successfully', data: { applications } }
+    return { success: true, message: 'Applications fetched successfully', data: { applications } }
+  }
+
+  @Get(':jobPostId/applications/:applicationId')
+  @Auth({ target: 'company' })
+  async httpGetApplication(
+    @Param('jobPostId', ParseObjectId) jobPostId: Types.ObjectId,
+    @Param('applicationId') applicationId: Types.ObjectId,
+    @ReqCompany() company: CompanyDocument,
+  ) {
+    const application = await this.jobsService.getApplication(jobPostId, applicationId, company)
+    return { success: true, message: 'Application fetched successfully', data: { application } }
   }
 }
