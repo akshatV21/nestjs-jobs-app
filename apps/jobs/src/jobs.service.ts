@@ -35,6 +35,10 @@ export class JobsService {
     return post
   }
 
+  async get(company: CompanyDocument) {
+    return await this.JobRepository.find({ company: company._id })
+  }
+
   async getById(id: Types.ObjectId) {
     return await this.JobRepository.findById(
       id,

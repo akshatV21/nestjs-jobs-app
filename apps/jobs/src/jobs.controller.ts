@@ -31,6 +31,13 @@ export class JobsController {
     return { success: true, message: 'Job posted successfully.', data: { job: jobPost } }
   }
 
+  @Get()
+  @Auth({ target: 'company' })
+  async httpGetjobPosts(@ReqCompany() company: CompanyDocument) {
+    const jobPosts = await this.jobsService.get(company)
+    return { success: true, message: 'Jobs fetched successfully.', data: { jobs: jobPosts } }
+  }
+
   @Get(':id')
   @Auth({ target: 'both' })
   async httpGetJobPost(@Param('id', ParseObjectId) jobPostId: Types.ObjectId) {
