@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req, UseGuards, UseInterceptors } from '@nestjs/common'
+import { Body, Controller, Get, Param, Patch, Post, Query, Req, UseGuards, UseInterceptors } from '@nestjs/common'
 import { JobsService } from './jobs.service'
 import {
   Auth,
@@ -13,8 +13,8 @@ import {
 import { CreateJobDto } from './dtos/create-job.dto'
 import { Types } from 'mongoose'
 import { ParseObjectId } from 'utils/pipes/objectId.pipe'
-import { map } from 'rxjs'
 import { ApplicationDto } from './dtos/create-application.dto'
+import { ApplicationStatus } from 'utils/types'
 
 @Controller('jobs')
 export class JobsController {
@@ -68,5 +68,17 @@ export class JobsController {
   ) {
     const application = await this.jobsService.getApplication(jobPostId, applicationId, company)
     return { success: true, message: 'Application fetched successfully', data: { application } }
+  }
+
+  @Patch(':jobPostId/applications/:applicationId/status')
+  @Auth({ target: 'company' })
+  async httpUpdateApplicationStatus(
+    @Param('jobPostId', ParseObjectId) jobPostId: Types.ObjectId,
+    @Param('applicationId') applicationId: Types.ObjectId,
+    @Query('status') status: ApplicationStatus,
+    @ReqCompany() company: CompanyDocument,
+  ) {
+    await this.jobsService.updateStatus(jobPostId, applicationId, status, company)
+    return { success: true, message: `Application status successfully changed to ${status}` }
   }
 }

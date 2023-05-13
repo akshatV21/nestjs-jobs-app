@@ -1,6 +1,6 @@
 import { BadRequestException, ForbiddenException, Inject, Injectable } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
-import { SERVICES } from 'utils/constants'
+import { APPLICATION_STATUSES, SERVICES } from 'utils/constants'
 import { CreateJobDto } from './dtos/create-job.dto'
 import { lastValueFrom, map } from 'rxjs'
 import { JobRepository } from '@lib/common/database/repositories/job.repository'
@@ -8,6 +8,7 @@ import { CompanyDocument, CompanyRepository, PaymentDto, UserDocument, UserRepos
 import { Types } from 'mongoose'
 import { ApplicationRepository } from '@lib/common/database/repositories/application.repository'
 import { ApplicationDto } from './dtos/create-application.dto'
+import { ApplicationStatus } from 'utils/types'
 
 @Injectable()
 export class JobsService {
@@ -72,5 +73,22 @@ export class JobsService {
 
     const application = await this.ApplicationRepository.findById(applicationId, {}, { path: 'user' })
     return application
+  }
+
+  async updateStatus(
+    jobPostId: Types.ObjectId,
+    applicationId: Types.ObjectId,
+    status: ApplicationStatus,
+    company: CompanyDocument,
+  ) {
+    const jobPostExists = company.postings.find(postId => jobPostId.equals(postId))
+    if (!jobPostExists) throw new ForbiddenException('You are forbidden to make this request.')
+
+    const newStatus = APPLICATION_STATUSES[status.toUpperCase()]
+    if (!newStatus) throw new BadRequestException('Invalid status value.')
+
+    await this.ApplicationRepository.update(applicationId, {
+      $set: { status: newStatus },
+    })
   }
 }
