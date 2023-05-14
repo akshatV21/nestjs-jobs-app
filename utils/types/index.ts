@@ -1,4 +1,4 @@
-import { APPLICATION_STATUSES, GENDERS, JOB_TYPES, SERVICES, SKILLS, TARGETS } from 'utils/constants'
+import { APPLICATION_STATUSES, GENDERS, JOB_TYPES, MESSAGE_TYPES, SERVICES, SKILLS, TARGETS } from 'utils/constants'
 
 type ObjectValuesUnion<T extends Record<string, string>> = T extends Record<string, infer U> ? U : never
 
@@ -15,3 +15,5 @@ export type JobTypeLowerCase = Lowercase<JobType>
 export type Target = ObjectValuesUnion<typeof TARGETS>
 
 export type ApplicationStatus = ObjectValuesUnion<typeof APPLICATION_STATUSES>
+
+export type Message = (typeof MESSAGE_TYPES)[number]

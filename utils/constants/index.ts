@@ -47,3 +47,5 @@ export const APPLICATION_STATUSES = {
   DECLINED: 'declined',
   IN_PROCESS: 'in-process',
 } as const
+
+export const MESSAGE_TYPES = ['text', 'assignment', 'submission'] as const
