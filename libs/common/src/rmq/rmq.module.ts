@@ -11,6 +11,7 @@ import { ConfigService } from '@nestjs/config'
 export class RmqModule {
   static register(services: Service[]): DynamicModule {
     return {
+      global: true,
       module: RmqModule,
       imports: [
         ClientsModule.registerAsync(

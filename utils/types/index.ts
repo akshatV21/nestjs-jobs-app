@@ -16,4 +16,4 @@ export type Target = ObjectValuesUnion<typeof TARGETS>
 
 export type ApplicationStatus = ObjectValuesUnion<typeof APPLICATION_STATUSES>
 
-export type Message = (typeof MESSAGE_TYPES)[number]
+export type MessageType = (typeof MESSAGE_TYPES)[number]

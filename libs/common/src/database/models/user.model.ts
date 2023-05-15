@@ -3,6 +3,7 @@ import { hashSync } from 'bcrypt'
 import { Document, Types } from 'mongoose'
 import { Gender, Skill } from 'utils/types'
 import { AbstractSchema } from '../abstract.schema'
+import { Chat } from './chat.model'
 
 export type UserDocument = User & Document
 
@@ -34,6 +35,9 @@ export class User extends AbstractSchema {
 
   @Prop({ default: [] })
   applications?: Types.ObjectId[]
+
+  @Prop({ default: [], ref: 'Chat' })
+  chats?: []
 }
 
 const UserSchema = SchemaFactory.createForClass(User)

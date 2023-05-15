@@ -4,6 +4,7 @@ import { Company } from './company.model'
 import { JobType, JobTypeLowerCase, Skill } from 'utils/types'
 import { JOB_TYPES } from 'utils/constants'
 import { AbstractSchema } from '../abstract.schema'
+import { Chat } from './chat.model'
 
 export type JobDocument = Job & Document
 
@@ -35,6 +36,9 @@ export class Job extends AbstractSchema {
 
   @Prop({ required: true })
   transactionId: string
+
+  @Prop({ default: [], ref: 'Chat' })
+  chats?: []
 }
 
 export const JobSchema = SchemaFactory.createForClass(Job)

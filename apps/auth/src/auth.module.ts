@@ -13,6 +13,8 @@ import {
   UserSchema,
   RmqModule,
   Authorize,
+  Chat,
+  ChatSchema,
 } from '@lib/common'
 import { APP_GUARD } from '@nestjs/core'
 import { SERVICES } from 'utils/constants'
@@ -31,6 +33,7 @@ import { SERVICES } from 'utils/constants'
     }),
     DatabaseModule,
     DatabaseModule.forFeature([
+      { name: Chat.name, schema: ChatSchema },
       { name: User.name, schema: UserSchema },
       { name: Company.name, schema: CompanySchema },
     ]),

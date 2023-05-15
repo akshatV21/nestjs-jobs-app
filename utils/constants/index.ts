@@ -25,6 +25,7 @@ export const SERVICES = {
   AUTH_SERVICE: 'AUTH',
   JOBS_SERVICE: 'JOBS',
   PAYMENTS_SERVICE: 'PAYMENTS',
+  CHAT: 'CHAT',
 } as const
 
 export const JOB_TYPES = ['ON_SITE', 'REMOTE', 'HYBRID'] as const

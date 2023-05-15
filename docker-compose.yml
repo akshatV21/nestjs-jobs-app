@@ -36,6 +36,19 @@ services:
     env_file:
       - ./apps/payments/.env
 
+  chat:
+    build:
+      context: .
+      dockerfile: ./apps/chat/Dockerfile
+      target: development
+    command: npm run start:dev chat
+    ports:
+      - '8083:8083'
+    volumes:
+      - .:/app
+    env_file:
+      - ./apps/chat/.env
+
   mongo-server:
     image: mongo
     logging:
