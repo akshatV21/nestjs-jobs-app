@@ -11,7 +11,7 @@ async function bootstrap() {
 
   const configService = app.get<ConfigService>(ConfigService)
   const rmqService = app.get<RmqService>(RmqService)
-
+  
   const PORT = configService.get('PORT')
 
   app.connectMicroservice(rmqService.getOptions('CHAT'))

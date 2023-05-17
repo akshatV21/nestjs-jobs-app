@@ -1,5 +1,6 @@
 import { CompanyDocument, UserDocument } from '@lib/common'
 import { ContextType } from '@nestjs/common'
+import { Socket } from 'socket.io'
 import { Target } from 'utils/types'
 
 export interface HttpSuccessResponse {
@@ -20,4 +21,9 @@ export interface AuthPayload {
   user?: UserDocument
   company?: CompanyDocument
   type?: ContextType
+  entityId?: string
+}
+
+export interface AuthenticatedSocket extends Socket {
+  entityId?: string
 }

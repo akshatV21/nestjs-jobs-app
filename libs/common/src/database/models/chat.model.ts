@@ -1,8 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document, Types } from 'mongoose'
-import { Company } from './company.model'
-import { User } from './user.model'
-import { Job } from './job.model'
 
 export type ChatDocument = Chat & Document
 

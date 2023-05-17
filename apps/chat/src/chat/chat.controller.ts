@@ -11,6 +11,7 @@ export class ChatController {
   @Auth({ target: 'company' })
   async httpCreateNewChat(@Body() createChatDto: CreateChatDto, @ReqCompany() company: CompanyDocument) {
     const chat = await this.chatService.create(createChatDto, company)
+    // const chat = this.chatService.create2()
     return { success: true, message: 'Chat created successfully.', data: { chat } }
   }
 

@@ -78,6 +78,8 @@ export class Authorize implements CanActivate {
         request[res.target] = res[res.target]
         request['token'] = token
         request.target = res.target
+
+        if (type === 'ws') request.entityId = res.entityId
       }),
       map(() => true),
       catchError(err => {

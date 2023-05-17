@@ -24,13 +24,19 @@ export class AuthorizeRPC implements CanActivate {
     const { id, target } = this.validateToken(token)
 
     if (data.type === 'rpc') return true
-    if (data.type === 'ws') return true
+    if (data.type === 'ws') {
+      data.entityId = id
+      return true
+    }
+    
     if (data.target !== 'both' && data.target !== target) throw new RpcException(EXCEPTION_MSGS.UNAUTHORIZED)
 
     if (data.target === 'user') data.user = await this.UserRepository.findById(new Types.ObjectId(id))
     else if (data.target === 'company') data.company = await this.CompanyRepository.findById(new Types.ObjectId(id))
-    else if (data.target === 'both' && target === 'user') data.user = await this.UserRepository.findById(new Types.ObjectId(id))
-    else if (data.target === 'both' && target === 'company') data.company = await this.CompanyRepository.findById(new Types.ObjectId(id))
+    else if (data.target === 'both' && target === 'user')
+      data.user = await this.UserRepository.findById(new Types.ObjectId(id))
+    else if (data.target === 'both' && target === 'company')
+      data.company = await this.CompanyRepository.findById(new Types.ObjectId(id))
 
     if (!data[target]) throw new RpcException('Invalid Token.')
 
@@ -45,7 +51,7 @@ export class AuthorizeRPC implements CanActivate {
 
       // when jwt has expired
       if (err.name === 'TokenExpiredError') throw new RpcException(EXCEPTION_MSGS.JWT_EXPIRED)
-      
+
       // throws error when jwt is malformed
       throw new RpcException(EXCEPTION_MSGS.INVALID_JWT)
     })

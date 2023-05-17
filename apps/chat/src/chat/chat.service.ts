@@ -1,8 +1,10 @@
-import { ForbiddenException, Injectable } from '@nestjs/common'
+import { ForbiddenException, Inject, Injectable } from '@nestjs/common'
 import { CreateChatDto } from './dtos/create-chat.dto'
 import { ChatRepository, CompanyDocument, JobRepository, UserDocument, UserRepository } from '@lib/common'
 import { Types } from 'mongoose'
 import { Target } from 'utils/types'
+import { SERVICES } from 'utils/constants'
+import { ClientProxy } from '@nestjs/microservices'
 
 @Injectable()
 export class ChatService {
@@ -10,6 +12,7 @@ export class ChatService {
     private readonly JobRepository: JobRepository,
     private readonly UserRepository: UserRepository,
     private readonly ChatRepository: ChatRepository,
+    @Inject(SERVICES.NOTIFICATIONS_SERVICE) private readonly notificationsService: ClientProxy,
   ) {}
 
   async create(createChatDto: CreateChatDto, company: CompanyDocument) {
@@ -26,7 +29,14 @@ export class ChatService {
     const userUpdatePromise = this.UserRepository.update(createChatDto.user, { $push: { chats: chatObjectId } })
 
     const [chat] = await Promise.all([createChatPromise, jobUpdatePromise, userUpdatePromise])
+    this.notificationsService.emit('new-chat', chat)
+
     return chat
+  }
+
+  create2() {
+    this.notificationsService.emit('new-chat', { user: '123456' })
+    return { user: '123456' }
   }
 
   async list<T extends Target>(target: T, entity: T extends 'user' ? UserDocument : CompanyDocument, queries: any) {
