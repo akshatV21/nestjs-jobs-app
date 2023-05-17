@@ -8,17 +8,17 @@ export type ChatDocument = Chat & Document
 
 @Schema({ timestamps: true })
 export class Chat {
-  @Prop({ required: true, ref: Company.name })
+  @Prop({ required: true, ref: 'Company' })
   company: Types.ObjectId
 
-  @Prop({ required: true, ref: User.name })
+  @Prop({ required: true, ref: 'User' })
   user: Types.ObjectId
 
-  @Prop({ required: true, ref: Job.name })
+  @Prop({ required: true, ref: 'Job' })
   job: Types.ObjectId
 
-  @Prop({ required: true, ref: Job.name })
-  messages: Types.ObjectId[]
+  @Prop({ ref: 'Job' })
+  messages?: Types.ObjectId[]
 }
 
 export const ChatSchema = SchemaFactory.createForClass(Chat)

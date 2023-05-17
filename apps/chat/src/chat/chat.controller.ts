@@ -1,12 +1,25 @@
-import { Controller, Get } from '@nestjs/common';
-import { ChatService } from './chat.service';
+import { Body, Controller, Get, Post, Req } from '@nestjs/common'
+import { ChatService } from './chat.service'
+import { Auth, CompanyDocument, ReqCompany, UserDocument } from '@lib/common'
+import { CreateChatDto } from './dtos/create-chat.dto'
 
-@Controller()
+@Controller('chat')
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
-  @Get()
-  getHello(): string {
-    return this.chatService.getHello();
+  @Post('new')
+  @Auth({ target: 'company' })
+  async httpCreateNewChat(@Body() createChatDto: CreateChatDto, @ReqCompany() company: CompanyDocument) {
+    const chat = await this.chatService.create(createChatDto, company)
+    return { success: true, message: 'Chat created successfully.', data: { chat } }
+  }
+
+  @Get('list')
+  @Auth({ target: 'both' })
+  async httpGetChatList(@Req() request: any) {
+    const target = request.target
+    const entity: CompanyDocument | UserDocument = request[target]
+    const chats = await this.chatService.list(target, entity, request.query)
+    return { success: true, message: 'Chats fetched successfully.', data: { chats } }
   }
 }

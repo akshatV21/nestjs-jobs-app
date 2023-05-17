@@ -1,2 +1,5 @@
 export * from './user.repository'
 export * from './company.repository'
+export * from './application.repository'
+export * from './job.repository'
+export * from './chat.repository'

@@ -3,8 +3,18 @@ import { ChatModule } from './chat/chat.module'
 import { MessagesModule } from './messages/messages.module'
 import { ConfigModule } from '@nestjs/config'
 import * as Joi from 'joi'
-import { DatabaseModule, Job, JobSchema, RmqModule, User, UserSchema } from '@lib/common'
+import {
+  Authorize,
+  DatabaseModule,
+  HttpRedisCacheInterceptor,
+  Job,
+  JobSchema,
+  RmqModule,
+  User,
+  UserSchema,
+} from '@lib/common'
 import { SERVICES } from 'utils/constants'
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
 
 @Module({
   imports: [
@@ -25,6 +35,9 @@ import { SERVICES } from 'utils/constants'
     MessagesModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    { provide: APP_GUARD, useClass: Authorize },
+    { provide: APP_INTERCEPTOR, useClass: HttpRedisCacheInterceptor },
+  ],
 })
 export class AppModule {}

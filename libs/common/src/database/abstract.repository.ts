@@ -8,8 +8,8 @@ export abstract class AbstractRepository<T extends Document, S extends Record<st
     return entity.save()
   }
 
-  async find(query: FilterQuery<T>, projection?: ProjectionType<T>): Promise<T[]> {
-    return await this.AbstractModel.find(query, projection, { lean: true })
+  async find(query: FilterQuery<T>, projection?: ProjectionType<T>, populate?: PopulateOptions): Promise<T[]> {
+    return await this.AbstractModel.find(query, projection, { lean: true, populate })
   }
 
   async findOne(query: FilterQuery<T>, projection?: ProjectionType<T>): Promise<T> {
