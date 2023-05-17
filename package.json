@@ -29,6 +29,8 @@
     "@nestjs/microservices": "^9.4.0",
     "@nestjs/mongoose": "^9.2.2",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/platform-socket.io": "^9.4.1",
+    "@nestjs/websockets": "^9.4.1",
     "amqp-connection-manager": "^4.1.12",
     "amqplib": "^0.10.3",
     "bcrypt": "^5.1.0",

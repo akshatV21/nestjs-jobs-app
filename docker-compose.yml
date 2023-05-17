@@ -49,6 +49,19 @@ services:
     env_file:
       - ./apps/chat/.env
 
+  notifications:
+    build:
+      context: .
+      dockerfile: ./apps/notifications/Dockerfile
+      target: development
+    command: npm run start:dev notifications
+    ports:
+      - '8082:8082'
+    volumes:
+      - .:/app
+    env_file:
+      - ./apps/notifications/.env
+
   mongo-server:
     image: mongo
     logging:
