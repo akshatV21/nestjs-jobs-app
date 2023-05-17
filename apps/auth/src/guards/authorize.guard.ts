@@ -22,8 +22,9 @@ export class AuthorizeRPC implements CanActivate {
     if (!token) throw new RpcException(EXCEPTION_MSGS.NULL_TOKEN)
 
     const { id, target } = this.validateToken(token)
-    
+
     if (data.type === 'rpc') return true
+    if (data.type === 'ws') return true
     if (data.target !== 'both' && data.target !== target) throw new RpcException(EXCEPTION_MSGS.UNAUTHORIZED)
 
     if (data.target === 'user') data.user = await this.UserRepository.findById(new Types.ObjectId(id))
