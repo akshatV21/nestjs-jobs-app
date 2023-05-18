@@ -3,7 +3,7 @@ import { CreateChatDto } from './dtos/create-chat.dto'
 import { ChatRepository, CompanyDocument, JobRepository, UserDocument, UserRepository } from '@lib/common'
 import { Types } from 'mongoose'
 import { Target } from 'utils/types'
-import { SERVICES } from 'utils/constants'
+import { EVENTS, SERVICES } from 'utils/constants'
 import { ClientProxy } from '@nestjs/microservices'
 
 @Injectable()
@@ -29,7 +29,7 @@ export class ChatService {
     const userUpdatePromise = this.UserRepository.update(createChatDto.user, { $push: { chats: chatObjectId } })
 
     const [chat] = await Promise.all([createChatPromise, jobUpdatePromise, userUpdatePromise])
-    this.notificationsService.emit('new-chat', chat)
+    this.notificationsService.emit(EVENTS.CHAT_CREATED, chat)
 
     return chat
   }

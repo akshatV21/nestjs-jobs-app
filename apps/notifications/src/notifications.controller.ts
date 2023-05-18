@@ -3,15 +3,21 @@ import { NotificationsService } from './notifications.service'
 import { EventPattern, Payload } from '@nestjs/microservices'
 import { Auth } from '@lib/common'
 import { EventEmitter2 } from '@nestjs/event-emitter'
-import { NOTIFICATION_EVENTS } from 'utils/constants'
+import { EVENTS } from 'utils/constants'
 
 @Controller()
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService, private eventEmitter: EventEmitter2) {}
 
-  @EventPattern('new-chat')
+  @EventPattern(EVENTS.CHAT_CREATED)
   @Auth({ target: 'company' })
   notifyNewChatCreated(@Payload() payload: any) {
-    this.eventEmitter.emit(NOTIFICATION_EVENTS.CHAT_CREATED, payload)
+    this.eventEmitter.emit(EVENTS.CHAT_CREATED, payload)
+  }
+
+  @EventPattern(EVENTS.MESSAGE_CREATED)
+  @Auth({ target: 'both' })
+  notifyNewMessageCreated(@Payload() payload: any) {
+    this.eventEmitter.emit(EVENTS.MESSAGE_CREATED, payload)
   }
 }

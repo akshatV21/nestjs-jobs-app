@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common'
-import { Socket } from 'socket.io'
 import { AuthenticatedSocket } from 'utils/interfaces'
 
 @Injectable()
-export class SocketSessions {
+export class MessagesSockketSession {
   private sessions: Map<string, AuthenticatedSocket> = new Map()
 
   getSocket(id: string) {

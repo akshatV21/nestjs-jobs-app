@@ -1,10 +1,10 @@
-import { ChatRepository, CompanyDocument, MessageRepository, UserDocument } from '@lib/common'
+import { ChatDocument, ChatRepository, CompanyDocument, MessageRepository, UserDocument } from '@lib/common'
 import { Inject, Injectable } from '@nestjs/common'
 import { Types } from 'mongoose'
 import { CreateMessageDto } from './dtos/create-message.dto'
 import { Target } from 'utils/types'
 import { firstLetterUpperCase } from 'utils/functions'
-import { NOTIFICATION_EVENTS, SERVICES } from 'utils/constants'
+import { EVENTS, SERVICES } from 'utils/constants'
 import { ClientProxy } from '@nestjs/microservices'
 
 @Injectable()
@@ -19,6 +19,7 @@ export class MessagesService {
     createMessageDto: CreateMessageDto,
     target: T,
     entity: T extends 'user' ? UserDocument : CompanyDocument,
+    chat: ChatDocument,
   ) {
     const messageObjectId = new Types.ObjectId()
 
@@ -31,7 +32,9 @@ export class MessagesService {
     })
 
     const [message] = await Promise.all([createMessagePromise, chatUpdatePromise])
-    this.notificationsService.emit(NOTIFICATION_EVENTS.MESSAGE_CREATED, message)
+
+    const reciever = target === 'user' ? 'company' : 'user'
+    this.notificationsService.emit(EVENTS.MESSAGE_CREATED, { chat, message, reciever })
 
     return message
   }

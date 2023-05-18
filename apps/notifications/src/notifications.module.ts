@@ -7,7 +7,7 @@ import { SERVICES } from 'utils/constants'
 import { Authorize, RmqModule } from '@lib/common'
 import { APP_GUARD } from '@nestjs/core'
 import { NotificationsGateway } from './notifications.gateway'
-import { SocketSessions } from './socket-sessions.service'
+import { NotificationsSockketSession } from './notifications-socket-sessions.service'
 import { EventEmitterModule } from '@nestjs/event-emitter'
 
 @Module({
@@ -26,6 +26,11 @@ import { EventEmitterModule } from '@nestjs/event-emitter'
     EventEmitterModule.forRoot(),
   ],
   controllers: [NotificationsController],
-  providers: [NotificationsGateway, NotificationsService, SocketSessions, { provide: APP_GUARD, useClass: Authorize }],
+  providers: [
+    NotificationsGateway,
+    NotificationsService,
+    NotificationsSockketSession,
+    { provide: APP_GUARD, useClass: Authorize },
+  ],
 })
 export class NotificationsModule {}
