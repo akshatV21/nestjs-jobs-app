@@ -55,6 +55,8 @@ export const MESSAGE_TYPES = ['text', 'assignment', 'submission'] as const
 export const EVENTS = {
   CHAT_CREATED: 'chat-created',
   MESSAGE_CREATED: 'message-created',
+  MESSAGE_RECIEVED: 'message-recieved',
+  MESSAGE_SEEN: 'message-seen',
 } as const
 
 export const MESSAGE_STATUS = {

@@ -1,16 +1,19 @@
 import { OnEvent } from '@nestjs/event-emitter'
-import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets'
+import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets'
 import { Server } from 'socket.io'
-import { EVENTS, SERVICES } from 'utils/constants'
+import { EVENTS, MESSAGE_STATUS, SERVICES } from 'utils/constants'
 import { MessagesSockketSession } from './message-socket-sessions.service'
 import { AuthenticatedSocket } from 'utils/interfaces'
 import { Inject } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
+import { MessageRepository } from '@lib/common'
+import { Types } from 'mongoose'
 
 @WebSocketGateway()
 export class MessagesGateway {
   constructor(
     private readonly socketSessions: MessagesSockketSession,
+    private readonly MessageRepository: MessageRepository,
     @Inject(SERVICES.NOTIFICATIONS_SERVICE) private readonly notificationsService: ClientProxy,
   ) {}
 
@@ -23,6 +26,28 @@ export class MessagesGateway {
 
   handleDisconnect(socket: AuthenticatedSocket) {
     this.socketSessions.removeSocket(socket.entityId)
+  }
+
+  @SubscribeMessage(EVENTS.MESSAGE_RECIEVED)
+  async handleMessageRecievedEvent(@MessageBody() data: any) {
+    const { message } = data
+    const senderId = message.senderId
+
+    const socket = this.socketSessions.getSocket(senderId)
+    await this.MessageRepository.update(new Types.ObjectId(senderId), { $set: { status: MESSAGE_STATUS.RECIEVED } })
+
+    socket.emit(EVENTS.MESSAGE_RECIEVED, data)
+  }
+
+  @SubscribeMessage(EVENTS.MESSAGE_SEEN)
+  async handleMessageSeenEvent(@MessageBody() data: any) {
+    const { message } = data
+    const senderId = message.senderId
+
+    const socket = this.socketSessions.getSocket(senderId)
+    await this.MessageRepository.update(new Types.ObjectId(senderId), { $set: { status: MESSAGE_STATUS.SEEN } })
+
+    socket.emit(EVENTS.MESSAGE_RECIEVED, data)
   }
 
   @OnEvent(EVENTS.MESSAGE_CREATED)
