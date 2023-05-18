@@ -54,6 +54,7 @@ export const MESSAGE_TYPES = ['text', 'assignment', 'submission'] as const
 
 export const NOTIFICATION_EVENTS = {
   CHAT_CREATED: 'chat-created',
+  MESSAGE_CREATED: 'message-created',
 } as const
 
 export const MESSAGE_STATUS = {

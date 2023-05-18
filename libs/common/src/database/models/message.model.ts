@@ -5,10 +5,16 @@ import { MessageStatus, MessageType } from 'utils/types'
 
 export type MessageDocument = Message & Document
 
-@Schema({ timestamps: true })
+@Schema({ timestamps: true, toObject: { virtuals: true } })
 export class Message {
   @Prop({ required: true, ref: 'Chat' })
   chat: Types.ObjectId
+
+  @Prop({ required: true })
+  senderId: Types.ObjectId
+
+  @Prop({ required: true })
+  senderModel: string
 
   @Prop({ default: MESSAGE_TYPES[0], type: String })
   type: MessageType
@@ -29,4 +35,13 @@ export class Message {
   status?: MessageStatus
 }
 
-export const MessageSchema = SchemaFactory.createForClass(Message)
+const MessageSchema = SchemaFactory.createForClass(Message)
+
+MessageSchema.virtual('sender', {
+  ref: (doc: MessageDocument) => doc.senderModel,
+  localField: 'senderId',
+  foreignField: '_id',
+  justOne: true,
+})
+
+export { MessageSchema }

@@ -4,7 +4,7 @@ import { Types } from 'mongoose'
 import { MESSAGE_TYPES } from 'utils/constants'
 import { MessageType } from 'utils/types'
 
-export class CreateChatDto {
+export class CreateMessageDto {
   @IsNotEmpty()
   @IsMongoId()
   @Type(() => Types.ObjectId)
