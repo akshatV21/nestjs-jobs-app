@@ -24,6 +24,8 @@ The application uses MongoDB as the database and Redis for caching. It also util
 - **Payments**: Payments are handled using Stripe integration, allowing secure and convenient payment processing.
 - **NestJS Workspace**: The project is organized as a NestJS workspace, making it easy to manage and scale the application.
 - **Request and Response Caching**: Redis is used for caching, improving the performance and responsiveness of the application.
+- **Target-Locked Endpoints**: Certain endpoints are locked to specific users based on their roles. For example, job posting and assignment creation endpoints are only accessible to companies, while application acceptance and denial endpoints, as well as job application endpoints, are available to users. The Auth Guard ensures that these endpoints are restricted to the appropriate users.
+
 
 ## Prerequisites
 
