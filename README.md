@@ -14,6 +14,17 @@ This application provides a microservice architecture with various services to h
 
 The application uses MongoDB as the database and Redis for caching. It also utilizes RabbitMQ as the message broker for inter-service communication.
 
+# Features
+
+- **JWT Authentication**: Jsonwebtokens are used for user authentication, ensuring secure access to protected routes.
+- **Authorization**: All types of requests (HTTP, TCP, websockets) are authorized to ensure only authenticated users can access the services.
+- **Job Postings**: Companies can post multiple job postings, providing detailed information about the job requirements and description.
+- **Job Applications**: Users can apply to multiple job postings, expressing their interest in the available positions.
+- **Assessments/Assignments**: Companies can assign assessments or assignments to applicants to evaluate their skills and suitability for the job.
+- **Payments**: Payments are handled using Stripe integration, allowing secure and convenient payment processing.
+- **NestJS Workspace**: The project is organized as a NestJS workspace, making it easy to manage and scale the application.
+- **Request and Response Caching**: Redis is used for caching, improving the performance and responsiveness of the application.
+
 ## Prerequisites
 
 - Docker and Docker Compose
