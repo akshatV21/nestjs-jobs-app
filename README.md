@@ -1,73 +1,112 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# NestJS Jobs App
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Welcome to the NestJS Jobs App repository! This is a job posting backend service made in Node.js using the NestJS framework.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Overview
 
-## Description
+This application provides a microservice architecture with various services to handle different functionalities of the job posting system. The services included are:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Auth Service: Responsible for user registration and authentication.
+- Payments Service: Integrates with Stripe for payment processing.
+- Job Posting Service: Handles operations for job postings and allows users to apply to job postings.
+- Notifications Service: Manages notifications related to job postings and uses websockets for real-time updates.
+- Chat Service: Provides a messaging system using a websocket gateway.
 
-## Installation
+The application uses MongoDB as the database and Redis for caching. It also utilizes RabbitMQ as the message broker for inter-service communication.
 
-```bash
-$ npm install
-```
+## Prerequisites
 
-## Running the app
+- Docker and Docker Compose
+- Node.js
+- MongoDB
+- Redis
+- RabbitMQ
+
+## Getting Started
+
+To run the application locally, follow these steps:
+
+1. Clone the repository:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+git clone https://github.com/akshatV21/nestjs-jobs-app.git
 ```
 
-## Test
+2. Install dependencies:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+cd nestjs-jobs-app
+npm install
 ```
 
-## Support
+3. Start the services using docker-compose
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+# This command will start all the services, including the database, Redis, and RabbitMQ.
+docker-compose up
+```
 
-## Stay in touch
+## Access the application
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+The services should now be running and accessible at the following endpoints:
 
-## License
+- Auth Service: http://localhost:8080
+- Chat Service: http://localhost:8083
+- Notifications Service: Not exposed via NodePort
+- Job Posting Service: http://localhost:8081
+- Payments Service: Not exposed via NodePort
 
-Nest is [MIT licensed](LICENSE).
+## Services and Environment Variables
+
+### Auth Service
+
+- PORT: 8080
+- MONGO_URI: mongodb://mongo-server/jobs
+- JWT_SECRET: secret
+- RMQ_URL: amqp://rmq-server:5672
+- RMQ_AUTH_QUEUE: AUTH
+
+### Chat Service
+
+- PORT: 8083
+- MONGO_URI: mongodb://mongo-server/jobs
+- RMQ_URL: amqp://rmq-server:5672
+- RMQ_AUTH_QUEUE: AUTH
+- RMQ_CHAT_QUEUE: CHAT
+- RMQ_NOTIFICATIONS_QUEUE: NOTIFICATIONS
+- REDIS_HOST: redis-server
+- REDIS_PORT: 6379
+
+### Notifications Service
+
+- RMQ_URL: amqp://rmq-server:5672
+- RMQ_AUTH_QUEUE: AUTH
+- RMQ_JOBS_QUEUE: JOBS
+- RMQ_NOTIFICATIONS_QUEUE: NOTIFICATIONS
+- REDIS_HOST: redis-server
+- REDIS_PORT: 6379
+
+### Job Posting Service
+
+- PORT: 8081
+- MONGO_URI: mongodb://mongo-server/jobs
+- RMQ_URL: amqp://rmq-server:5672
+- RMQ_AUTH_QUEUE: AUTH
+- RMQ_JOBS_QUEUE: JOBS
+- RMQ_PAYMENTS_QUEUE: PAYMENTS
+- RMQ_NOTIFICATIONS_QUEUE: NOTIFICATIONS
+- REDIS_HOST: redis-server
+- REDIS_PORT: 6379
+
+### Payments Service
+
+- RMQ_URL: amqp://rmq-server:5672
+- RMQ_AUTH_QUEUE: AUTH
+- RMQ_PAYMENTS_QUEUE: PAYMENTS
+- STRIPE_SECRET_KEY: stripe-secret-key
+
+## Contributing
+
+Contributions are welcome! If you have any suggestions, bug reports, or feature requests, please open an issue or submit a pull request.
+
+Please note that the code blocks in the Markdown file are indented by four spaces for proper formatting.
